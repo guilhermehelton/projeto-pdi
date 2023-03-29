@@ -3,4 +3,6 @@ import functions
 if __name__ == '__main__':
     imagem = './images/JPCNN001.bmp'
     imagemLimiarizada = functions.getImagemLimiarizada(imagem)
-    functions.showImage(imagemLimiarizada)
+    # functions.showImage(imagemLimiarizada)
+    imagemPreenchida = functions.getImagemPreenchida(imagemLimiarizada)
+    functions.showImage(imagemPreenchida)
