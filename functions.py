@@ -42,3 +42,33 @@ def getImagemLimiarizada(imagem):
     _, resultImage = cv.threshold(img, limiar, 255, cv.THRESH_BINARY)
     return resultImage
 
+def fillImageWithRectangle(imagemLimiarizada):
+    startPoint = (0, 0)
+    endPoint = (2048, 2048)
+    image = cv.rectangle(imagemLimiarizada, startPoint, endPoint, 0, 100)
+    return image
+
+def fillImageDownwards(image):
+    for y in range(51, 1998):
+        for x in range(51, 1998):
+            if image[x][y] == 0:
+                break
+            if image[x][y] == 255:
+                image[x][y] = 0
+    return image
+
+def fillImageUpwards(image):
+    for y in range(51, 1998):
+        for x in reversed(range(51, 1998)):
+            if image[x][y] == 0:
+                break
+            if image[x][y] == 255:
+                image[x][y] = 0
+    return image
+
+def getImagemPreenchida(imagemLimiarizada):
+    imagemPreenchida = fillImageWithRectangle(imagemLimiarizada)
+    imagemPreenchida = fillImageDownwards(imagemPreenchida)
+    imagemPreenchida = fillImageUpwards(imagemPreenchida)
+    return imagemPreenchida
+
