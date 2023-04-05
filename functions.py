@@ -1,7 +1,6 @@
 import math
 import cv2 as cv
 import matplotlib.pyplot as plt
-import numpy as np
 
 
 def showImage(imagem):
@@ -79,41 +78,3 @@ def getImagemPreenchida(imagemLimiarizada):
     imagemPreenchida = fillImageDownwards(imagemPreenchida)
     imagemPreenchida = fillImageUpwards(imagemPreenchida)
     return imagemPreenchida
-
-
-def criaRetangulo(largura, altura):
-    retangulo = np.ones((largura, altura), np.uint8)
-
-    return retangulo
-
-
-def criaDisco(raio):
-    disco = np.ones((2*raio, 2*raio), np.uint8)
-
-    for linha in range(raio):
-        quantidadeDeZeros = raio - (raio - linha)
-        for coluna in range(len(disco)):
-            if (coluna+1 <= quantidadeDeZeros or coluna+1 >= (len(disco) - quantidadeDeZeros)):
-                disco[(raio - 1) - linha][coluna] = 0
-
-    for linha in range(raio+1):
-        quantidadeDeZeros = raio - (raio - linha)
-        for coluna in range(len(disco)):
-            if (coluna+1 <= quantidadeDeZeros or coluna+1 >= (len(disco) - quantidadeDeZeros)):
-                disco[(raio - 1) + linha][coluna] = 0
-
-    return disco
-
-
-def getImagemSemRuido(imagemLimiarizadaInicial, imagemPreenchida):
-    ruido = imagemLimiarizadaInicial - imagemPreenchida
-    retangulo1 = criaRetangulo(30, 10)
-    retangulo2 = criaRetangulo(10, 30)
-    disco = criaDisco(35)
-    # operações morfologícas de dilatação
-    ruido_dilatado = cv.dilate(ruido, retangulo1)
-    ruido_dilatado = cv.dilate(ruido_dilatado, retangulo2)
-    ruido_dilatado = cv.dilate(ruido_dilatado, disco)
-    imagemSemRuido = imagemLimiarizadaInicial - ruido_dilatado
-
-    return imagemSemRuido
