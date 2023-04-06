@@ -1,6 +1,9 @@
 import math
 import cv2 as cv
 import matplotlib.pyplot as plt
+import numpy as np
+from skimage.morphology import (
+    dilation, disk, rectangle, closing, square, octagon)
 
 
 def showImage(imagem):
@@ -78,3 +81,80 @@ def getImagemPreenchida(imagemLimiarizada):
     imagemPreenchida = fillImageDownwards(imagemPreenchida)
     imagemPreenchida = fillImageUpwards(imagemPreenchida)
     return imagemPreenchida
+
+
+def calculaMedidasRetangulo(alturaImagem, larguraImagem):
+    return int(alturaImagem * 0.0146484375), int(larguraImagem * 0.0048828125)
+
+
+def calculaRaioDisco(alturaImagem, larguraImagem):
+    return max([int(alturaImagem * 0.029296875), int(larguraImagem * 0.029296875)])
+
+
+def corrigirRuidoImagem(imagemLimiarizadaInicial, imagemPreenchida):
+    mascaraRuido = imagemLimiarizadaInicial - imagemPreenchida
+    # pega o tamanho da imagem
+    altura, largura = mascaraRuido.shape
+
+    # pega as medidas dos elementos estruturantes
+    alturaRetangulo, larguraRetangulo = calculaMedidasRetangulo(
+        altura, largura)
+    raioDisco = calculaRaioDisco(altura, largura)
+
+    # criando elementos estruturantes
+    retangulo1 = rectangle(alturaRetangulo, larguraRetangulo)
+    retangulo2 = rectangle(larguraRetangulo, alturaRetangulo)
+    disco = disk(raioDisco)
+
+    # operações morfologícas de dilatação na mascara
+    ruido_dilatado = dilation(
+        mascaraRuido, [(disco, 1), (retangulo1, 1), (retangulo2, 1)])
+
+    imagemSemRuido = imagemLimiarizadaInicial - ruido_dilatado
+
+    return imagemSemRuido
+
+
+def corrigirBuracosImagem(imagemSemRuido):
+    # pega as medidas dos elementos estruturantes
+    ladoQuadrado = 35
+    raioDisco = 35
+
+    # criando elementos estruturantes
+    quadrado = square(ladoQuadrado)
+    disco = disk(raioDisco)
+
+    # aplicando operação morfológica fechamento
+    imagemSemBuracos = closing(imagemSemRuido, [(quadrado, 1), (disco, 1)])
+
+    return imagemSemBuracos
+
+
+def dividirImagem(imagem, porcentagem):
+    quantidadeLinhasDivisao = int(len(imagem) * porcentagem)
+
+    imagemDividida = np.split(imagem, [quantidadeLinhasDivisao])
+    return imagemDividida
+
+
+def corrigirContornosImagem(imagemSemBuracos):
+    [parteDeCima, parteDeBaixo] = dividirImagem(imagemSemBuracos, 0.8)
+
+    # criando elementos estruturantes para dilatação
+    retangulo = rectangle(40, 2)
+    octogono = octagon(17, 17)
+
+    # operações morfologícas de dilatação na parte de cima
+    parteDeCima = dilation(
+        parteDeCima, [(retangulo, 1), (octogono, 1)])
+
+    # criando elemento estruturante para fechamento
+    disco = disk(25)
+
+    # operação morfologíca de fechamento na parte de cima
+    parteDeCima = closing(parteDeCima, disco)
+
+    # juntar as imagens
+    imagemCorrigida = np.concatenate((parteDeCima, parteDeBaixo))
+
+    return imagemCorrigida
