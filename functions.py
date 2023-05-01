@@ -158,3 +158,26 @@ def corrigirContornosImagem(imagemSemBuracos):
     imagemCorrigida = np.concatenate((parteDeCima, parteDeBaixo))
 
     return imagemCorrigida
+
+def getEstatisticas(imagem, gt):
+    openedGT = cv.imread(gt, 0)
+    truePositive = falsePositive = trueNegative = falseNegative = 0
+    for x, xValue in enumerate(imagem):
+        for y, yValue in enumerate(xValue):
+            gtPixel = openedGT[x][y]
+            if gtPixel == 0:
+                if yValue <= 50:
+                    trueNegative += 1
+                else:
+                    falsePositive += 1
+            else:
+                if yValue <= 50:
+                    falseNegative += 1
+                else:
+                    truePositive += 1
+    imageSize = 2048 ** 2
+    truePositive /= imageSize
+    falseNegative /= imageSize
+    falsePositive /= imageSize
+    trueNegative /= imageSize
+    return [truePositive, falseNegative, falsePositive, trueNegative]
