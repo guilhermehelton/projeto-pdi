@@ -41,7 +41,7 @@ def printEstatisticas(values):
 
 if __name__ == '__main__':
     imagem = images.Image.NN001
-    imagemSegmentada = getImagemSegmentada(imagem.value)
+    imagemSegmentada = getImagemSegmentada(imagem.value, False)
     functions.showImage(imagemSegmentada)
     # values = getEstatisticas()
     # printEstatisticas(values)
