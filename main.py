@@ -1,9 +1,12 @@
 import functions
 import images
 
-def getImagemSegmentada(image):
+def getImagemSegmentada(image, isOtsu):
     imagem = f'./images/{image}.bmp'
-    imagemLimiarizada = functions.getImagemLimiarizada(imagem)
+    if isOtsu:
+        imagemLimiarizada = functions.getImagemLimiarizadaOtsu(imagem)
+    else:
+        imagemLimiarizada = functions.getImagemLimiarizada(imagem)
     imagemLimiarizadaInicial = imagemLimiarizada.copy()
     # functions.showImage(imagemLimiarizada)
     imagemPreenchida = functions.getImagemPreenchida(imagemLimiarizada)
@@ -18,10 +21,10 @@ def getImagemSegmentada(image):
     # functions.showImage(imagemSegmentada)
     return imagemSegmentada
 
-def getEstatisticas():
+def getEstatisticas(isOtsu):
     values = []
     for image in images.Image:
-        imagemSegmentada = getImagemSegmentada(image.value)
+        imagemSegmentada = getImagemSegmentada(image.value, isOtsu)
         gt = f'./GTs/{image.value}GT.bmp'
         valores = functions.getEstatisticas(imagemSegmentada, gt)
         values.append([image.value, valores])
@@ -40,8 +43,6 @@ if __name__ == '__main__':
     imagem = images.Image.NN001
     imagemSegmentada = getImagemSegmentada(imagem.value)
     functions.showImage(imagemSegmentada)
-    # print(functions.getEstatisticas(imagemSegmentada, gt))
-    # gt = f'./GTs/{imagem.value}GT.bmp'
     # values = getEstatisticas()
     # printEstatisticas(values)
     
