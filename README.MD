@@ -53,6 +53,31 @@ python -m pip install -U scikit-image
 | **F1 Score**          |	2TP/(2TP + FP + FN)	            | 0,843 |
 | **Índice de Jaccard** |	TP/(TP+FP+FN)                   | 0,729 |
 
+
+### Resultados usando limiarização com algoritmo de Otsu
+| Nome da imagem  | TP | FN | FP | TN |
+| ----- | ---- | ---- | ---- | ---- |
+| JPCNN001 | 0,346 | 0,031 | 0,039 | 0,584 |
+| JPCNN003 | 0,157 | 0,075 | 0,010 | 0,758 |
+| JPCNN005 | 0,336 | 0,048 | 0,036 | 0,581 |
+| JPCNN006 | 0,287 | 0,034 | 0,027 | 0,652 |
+| JPCLN006 | 0,167 | 0,121 | 0,005 | 0,706 |
+| JPCNN008 | 0,289 | 0,057 | 0,020 | 0,635 |
+| JPCLN008 | 0,002 | 0,391 | 0     | 0,607 |
+| JPCNN009 | 0,055 | 0,264 | 0     | 0,681 |
+| JPCLN009 | 0,196 | 0,102 | 0,031 | 0,671 |
+| JPCNN010 | 0,314 | 0,045 | 0,021 | 0,620 |
+| **Média** | **0,215** | **0,117** | **0,018** | **0,650** |
+
+### Estatísticas
+| Medida | Fórmula | Valor |
+| ------ | ------- | ----- |
+| **Acurácia**          |	(TP + TN) / (TP + FN + FP + TN) | 0,721 |
+| **Sensibilidade**     |	TP/(TP+FN)	                    | 0,648 |
+| **Especificidade**    |	TN/(TN+FP)	                    | 0,973 |
+| **F1 Score**          |	2TP/(2TP + FP + FN)	            | 0,761 |
+| **Índice de Jaccard** |	TP/(TP+FP+FN)                   | 0,614 |
+
 **Legenda**:
 **TP** = positivos verdadeiros
 **FN** = falsos negativos

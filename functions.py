@@ -48,6 +48,10 @@ def getImagemLimiarizada(imagem):
     _, resultImage = cv.threshold(img, limiar, 255, cv.THRESH_BINARY)
     return resultImage
 
+def getImagemLimiarizadaOtsu(imagem):
+    img = cv.imread(imagem, 0)
+    _, resultImage = cv.threshold(img, 0, 255, cv.THRESH_BINARY + cv.THRESH_OTSU)
+    return resultImage
 
 def fillImageWithRectangle(imagemLimiarizada):
     startPoint = (0, 0)
